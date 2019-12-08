@@ -7,11 +7,17 @@ import time
 
 class PointGame:
     def __init__(self):
+        self.MAX_X = 38
+        self.MIN_X = 1
+        self.MAX_Y = 26
+        self.MIN_Y = 1
+        
         self.player_x = 15
         self.player_y = 15
+        self.speed = 1
 
-        self.fruit_x = random.randint(3, 35)
-        self.fruit_y = random.randint(3, 20)
+        self.fruit_x = random.randint(3, 38)
+        self.fruit_y = random.randint(1, 26)
 
         self.fruit_symbol = "O"
         self.score = 0
@@ -75,8 +81,8 @@ class PointGame:
         Draw the fruit/symbol in the console
         """
         if self.player_x == self.fruit_x and self.player_y == self.fruit_y - 2:
-            self.fruit_x = random.randint(3, 35)
-            self.fruit_y = random.randint(3, 20)
+            self.fruit_x = random.randint(1, 38)
+            self.fruit_y = random.randint(3, 26)
             self.score += 1
             self.score_until_5 += 1
 
@@ -96,7 +102,7 @@ class PointGame:
         """
         A menu to the user see your score
         """
-        print(f"SCORE: {self.score} - COINS: {self.player_coins}")
+        print(f"SCORE: {self.score} - COINS: {self.player_coins} - x: {self.player_x} y: {self.player_y}")
         print("Q -> to open menu")
 
     def clean(self):
@@ -262,26 +268,39 @@ q -> QUIT""")
         """
         Move the player to up
         """
-        self.player_y -= 1
+        self.player_y -= self.speed
 
     def move_down(self):
         """
         Move the player to down
         """
-        self.player_y += 1
+        self.player_y += self.speed
 
     def move_left(self):
         """
         Move the player to the left
         """
-        self.player_x -= 1
+        self.player_x -= self.speed
 
     def move_right(self):
         """
         Move the player to the right
         """
-        self.player_x += 1
+        self.player_x += self.speed
 
+    def detect_collision(self):
+        if self.player_x < self.MIN_X:
+            self.player_x += self.speed
+
+        if self.player_x > self.MAX_X:
+            self.player_x -= self.speed
+
+        if self.player_y < self.MIN_Y:
+            self.player_y += self.speed
+
+        if self.player_y > self.MAX_Y:
+            self.player_y -= self.speed
+            
     def listen(self):
         """
         It is listener. It is listening if the user click the keyboard key (w, s, a, d), if clicked executes the function to make the player go to that direction
@@ -295,19 +314,20 @@ q -> QUIT""")
                 if keyboard.is_pressed("w"):
                     self.move_up()
 
-                elif keyboard.is_pressed("s"):
+                if keyboard.is_pressed("s"):
                     self.move_down()
 
-                elif keyboard.is_pressed("a"):
+                if keyboard.is_pressed("a"):
                     self.move_left()
 
-                elif keyboard.is_pressed("d"):
+                if keyboard.is_pressed("d"):
                     self.move_right()
 
-                elif keyboard.is_pressed("q"):
+                if keyboard.is_pressed("q"):
                     self.lobby()
 
                 self.draw_menu()
+                self.detect_collision()
                 self.draw_player()
                 self.clean()
                 self.draw_fruit()
@@ -322,5 +342,5 @@ q -> QUIT""")
         """
         self.clean()
         print("Game finished!")
-        os.system("pause")
+        time.sleep(0.5)
         quit()
