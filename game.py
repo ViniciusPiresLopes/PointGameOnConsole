@@ -29,7 +29,7 @@ class PointGame:
         self.player_symbols_purchased = {0: ".", 1: "", 2: "", 3: "", 4: "", 5: ""}
 
 
-    def run(self):
+    def play(self):
         """
         The main function
         """
@@ -130,7 +130,7 @@ class PointGame:
                 self.goto_store()
 
             elif keyboard.is_pressed("2"):
-                self.main()
+                self.play()
 
             elif keyboard.is_pressed("3"):
                 self.goto_items_purchased()
